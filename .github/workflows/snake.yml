@@ -20,10 +20,14 @@ jobs:
             dist/github-snake-dark.svg?palette=github-dark
             dist/github-snake.gif?color_snake=orange&color_dots=#bfd6f6,#8dbdff,#64a1f4,#4b91f1,#3c7dd9
 
-      - name: Commit and push generated files
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
-          build_dir: dist
-          force: true
+      - name: Push snake animation to output branch
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git fetch origin
+          git switch --orphan output
+          git rm -rf .
+          cp -r dist/* .
+          git add .
+          git commit -m "chore: generate snake contribution grid"
+          git push -f origin output
